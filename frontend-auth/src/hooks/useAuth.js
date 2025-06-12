@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 
 export default function useAuth() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access'));
 
     useEffect(() => {
-        const token = localStorage.getItem('access');
-        setIsAuthenticated(!!token);
+        const onStorageChange = () => {
+            setIsAuthenticated(!!localStorage.getItem('access'));
+        };
+
+        window.addEventListener('storage', onStorageChange);
+        return () => window.removeEventListener('storage', onStorageChange);
     }, []);
 
     return isAuthenticated;
