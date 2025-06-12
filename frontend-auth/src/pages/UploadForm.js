@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './UploadForm.css';
 
 const UploadForm = () => {
     const [title, setTitle] = useState('');
@@ -20,24 +21,30 @@ const UploadForm = () => {
 
         try {
             const token = localStorage.getItem('access');
-            const response = await axios.post('http://127.0.0.1:8000/api/posts/create/', formData, {
+            await axios.post('http://127.0.0.1:8000/api/posts/create/', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setMessage('Успешно загружено!');
+            setMessage('✅ Успешно загружено!');
         } catch (err) {
             console.error(err);
-            setMessage('Ошибка загрузки');
+            setMessage('❌ Ошибка загрузки');
         }
     };
 
     return (
-        <div>
+        <div className="upload-container">
             <h2>Загрузить новый пост</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Название" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <form onSubmit={handleSubmit} className="upload-form">
+                <input
+                    type="text"
+                    placeholder="Название"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
 
                 <select value={type} onChange={(e) => setType(e.target.value)}>
                     <option value="text">Текст</option>
@@ -45,14 +52,22 @@ const UploadForm = () => {
                 </select>
 
                 {type === 'text' ? (
-                    <textarea placeholder="Введите текст" value={content} onChange={(e) => setContent(e.target.value)} />
+                    <textarea
+                        placeholder="Введите текст"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
                 ) : (
-                    <input type="file" accept={type === 'image' ? 'image/*' : '.pdf,.doc,.docx,.txt'} onChange={(e) => setFile(e.target.files[0])} />
+                    <input
+                        type="file"
+                        accept={type === 'image' ? 'image/*' : '.pdf,.doc,.docx,.txt'}
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
                 )}
 
                 <button type="submit">Загрузить</button>
             </form>
-            {message && <p>{message}</p>}
+            {message && <p className="upload-message">{message}</p>}
         </div>
     );
 };
