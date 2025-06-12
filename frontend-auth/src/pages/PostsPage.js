@@ -84,9 +84,17 @@ function PostsPage() {
                     <h3>{post.title}</h3>
                     <p><b>Тип:</b> {post.type}</p>
                     <p><b>Статус:</b> {post.status}</p>
-                    <p><b>Похожесть:</b> {Math.round(post.similarity_score * 100)}%</p>
+                    <p
+                        style={{
+                            color: post.similarity_score >= 0.8 ? 'red' : 'black',
+                            fontWeight: post.similarity_score >= 0.8 ? 'bold' : 'normal'
+                        }}
+                    >
+                        <b>Похожесть:</b> {Math.round(post.similarity_score * 100)}%
+                    </p>
 
-                    <a href={post.document} target="_blank" rel="noreferrer">Скачать файл</a><br />
+
+                    <a href={post.document} target="_blank" rel="noreferrer">Скачать файл</a><br/>
                     <button onClick={() => downloadReport(post.sha256_hash)}>Проверить по хэшу</button>
 
                     <div className="comment-section">
